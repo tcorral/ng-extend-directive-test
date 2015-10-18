@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en" g-on-load="./app/extension">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular.js"></script>
+    <script data-main="scripts/main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.min.js"></script>
+    <script>
+        angular.module('preApp', [])
+                .directive('gOnLoad', function () {
+                    return {
+                        restrict: 'A',
+                        scope: {},
+                        link: function (scope, element, attrs) {
+                            var content = angular.element(document.body).html();
+                            console.log(content);
+                            require([attrs.gOnLoad], function (module) {
+                                angular.element(document.body).html('<div ng-controller="' +  module.name + 'Controller as ' + module.aliasController + '">' + content + '</div>');
+                                angular.bootstrap(angular.element(document.body).find('div')[0], [module.name]);
+                                document.body.removeAttribute('ng-cloak');
+                            });
+                        }
+                    }
+                });
+
+        angular.element(document).ready(function () {
+            angular.bootstrap(document.getElementsByTagName('head')[0], ['preApp']);
+        });
+
+    </script>
+</head>
+<body ng-cloak>
+{{mani}}
+{{ctrl.other}}
+</body>
+</html>
