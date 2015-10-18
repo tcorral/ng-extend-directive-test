@@ -15,6 +15,27 @@ define(function(require, exports, module) {
 
   module.exports = main
     .config(function($provide) {
+      $provide.decorator('TestValue', function($delegate) {
+        return 'quijote';
+      });
+      $provide.decorator('MyService', function($delegate) {
+        $delegate.getPepe = function() {
+          return 'Other Pepe';
+        };
+        return $delegate;
+      });
+      $provide.decorator('MyFactory', function($delegate) {
+        $delegate.getName = function() {
+          return 'My decorated getName'
+        };
+        return $delegate;
+      });
+      $provide.decorator('MyProv', function($delegate) {
+        $delegate.greet = function() {
+          return 'I love you';
+        };
+        return $delegate;
+      });
       $provide.decorator('clotDirective', function($delegate) {
         var directive = $delegate[0];
         directive.template = '<div>Pepe</div>';
