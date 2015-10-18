@@ -13,6 +13,7 @@ angular.module('myApp', [])
     ctrl.other = MyService.getPepe();
     ctrl.san = TestValue;
     $scope.mani = 'pindas';
+    //$scope.myDefault = 'A different value';
   })
   .controller('MySubController', function (){
     var ctrl = this;
@@ -30,10 +31,14 @@ angular.module('myApp', [])
 
 var extendControllers = {
   'MyController': {
+    $$scope: {
+      mani: 'testear'
+    },
     pepe: 'juana',
     $scope: {
-      mani: 'testear'
+      myDefault: 'My default value'
     }
+
   },
   'MySubController': {
     pepe: 'Manuela'
@@ -70,23 +75,25 @@ angular.module('myApp')
         var controller = $delegate(constructor, locals);
 
         if(extendController) {
-          if(extendController.hasOwnProperty('$scope')) {
-            // Force the specified values in the decorated controller.
-            for(var key in extendController.$scope) {
-
-              Object.defineProperty(locals.$scope, key, (function (value) {
+          // Force the specified values in $scope of the decorated controller.
+          if (extendController.hasOwnProperty('$$scope')) {
+            for (var key in extendController.$$scope) {
+              Object.defineProperty(locals.$scope, key, (function(value) {
                 return {
-                  get: function () {
+                  get: function() {
                     return value;
                   },
-                  set: function (){}
+                  set: function() {}
                 };
 
-              }(extendController.$scope[key])));
+              }(extendController.$$scope[key])));
             }
-            controller = $delegate(constructor, locals);
-            delete extendController.$scope;
           }
+          delete extendController.$$scope;
+          // Extend $scope that could be overwritten.
+          locals.$scope = angular.extend(locals.$scope, extendController.$scope || {});
+          controller = $delegate(constructor, locals);
+          // Extend controller.
           controller = angular.extend(controller, extendController);
         }
 
