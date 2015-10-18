@@ -45,22 +45,11 @@ define(function(require, exports, module) {
       };
     })
     .value('TestValue', 'sancho')
-    .controller(module.name + 'Controller', ['$scope', 'MyService', 'TestValue', 'MyFactory', 'MyProv', function($scope, MyService, TestValue, MyFactory, MyProv) {
-      var ctrl = this;
-      ctrl.pepe = 'juan';
-      ctrl.other = MyService.getPepe();
-      ctrl.san = TestValue;
-      $scope.mani = 'pindas';
-      //$scope.myDefault = 'A different value';
-      ctrl.name = MyFactory.getName();
-      ctrl.greeting = MyProv.greet();
-    }])
+    .controller(module.name + 'Controller', require('./controllers'))
     .config(function (MyProvProvider) {
       MyProvProvider.setSalutation('Hola');
     })
-    .run(function () {
-
-    });
+    .run(function () {});
   mod.aliasController = 'ctrl';
   module.exports = mod;
 });

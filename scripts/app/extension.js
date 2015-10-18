@@ -15,7 +15,7 @@ define(function(require, exports, module) {
 
   module.exports = main
     .config(function($provide) {
-      $provide.decorator('TestValue', function($delegate) {
+      $provide.decorator('TestValue', function() {
         return 'quijote';
       });
       $provide.decorator('MyService', function($delegate) {
