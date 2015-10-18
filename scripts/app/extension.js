@@ -15,6 +15,21 @@ define(function(require, exports, module) {
 
   module.exports = main
     .config(function($provide) {
+      $provide.decorator('clotDirective', function($delegate) {
+        var directive = $delegate[0];
+        directive.template = '<div>Pepe</div>';
+        var link = directive.link;
+        directive.restrict = 'AE';
+        directive.replace = false;
+        directive.compile = function() {
+          return function(scope, element, attrs, ctrls) {
+            if (typeof link === 'function') {
+              return link.apply(this, arguments);
+            }
+          };
+        };
+        return $delegate;
+      });
       $provide.decorator('$controller', ['$delegate', function($delegate) {
         return function(constructor, locals) {
           var constructorName = constructor.split(' ')[0];
