@@ -15,28 +15,34 @@ define(function(require, exports, module) {
 
   module.exports = main
     .config(function($provide) {
+      this.$injector = ['$provide'];
+      $provide.value('extendControllers', extendControllers);
       $provide.decorator('TestValue', function() {
         return 'quijote';
       });
       $provide.decorator('MyService', function($delegate) {
+        this.$injector = ['$delegate'];
         $delegate.getPepe = function() {
           return 'Other Pepe';
         };
         return $delegate;
       });
       $provide.decorator('MyFactory', function($delegate) {
+        this.$injector = ['$delegate'];
         $delegate.getName = function() {
           return 'My decorated getName'
         };
         return $delegate;
       });
       $provide.decorator('MyProv', function($delegate) {
+        this.$injector = ['$delegate'];
         $delegate.greet = function() {
           return 'I love you';
         };
         return $delegate;
       });
       $provide.decorator('clotDirective', function($delegate) {
+        this.$injector = ['$delegate'];
         var directive = $delegate[0];
         directive.template = '<div>Pepe</div>';
         var link = directive.link;
@@ -51,7 +57,8 @@ define(function(require, exports, module) {
         };
         return $delegate;
       });
-      $provide.decorator('$controller', ['$delegate', function($delegate) {
+      $provide.decorator('$controller', function($delegate, extendControllers) {
+        this.$injector = ['$delegate', 'extendControllers'];
         return function(constructor, locals) {
           var constructorName = constructor.split(' ')[0];
           var extendController = extendControllers[constructorName];
@@ -82,6 +89,6 @@ define(function(require, exports, module) {
 
           return controller;
         }
-      }])
+      });
     });
 });
